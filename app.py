@@ -1,4 +1,4 @@
-import sys,requests
+import sys,requests,json
 from datetime import datetime
 
 import leancloud
@@ -7,7 +7,6 @@ from flask import render_template
 from flask_sockets import Sockets
 from leancloud import LeanCloudError
 
-from views.todos import todos_view
 app = Flask(__name__)
 
 @app.route('/')
@@ -47,5 +46,5 @@ def python_version():
     return jsonify({"python-version": sys.version})
 
  
-#  if __name__ == '__main__':
-#   app.run(debug=True, port=os.getenv("PORT", default=5001))
+ # if __name__ == '__main__':
+ #  app.run(debug=True, port=os.getenv("PORT", default=5001))
