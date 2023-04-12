@@ -20,8 +20,14 @@ def upload():
     content=request.args.get('content',"")
     auth=request.args.get('auth')
     file_name=url.split("/")[-1]
-    with open(f'/tmp/{file_name}','wb') as file:
-        file.write(requests.get(url).content)
+    # with open(file_name, 'rb') as f:
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(f'/tmp/{file_name}','wb') as f:
+            for chunk in r.iter_content(chunk_size=8192): 
+                f.write(chunk)
+    # with open(f'/tmp/{file_name}','wb') as file:
+    #     file.write(requests.get(url).content)
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
@@ -32,10 +38,33 @@ def upload():
     )
     return json.dumps(r.json())
 
+@app.route('/upload2')
+def uplossad():
+    url=request.args.get('url')
+    channel=request.args.get('channel')
+    content=request.args.get('content',"")
+    auth=request.args.get('auth')
+    file_name=url.split("/")[-1]
+    # with open(file_name, 'rb') as f:
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(f'/tmp/{file_name}','wb') as f:
+            for chunk in r.iter_content(chunk_size=8192): 
+                f.write(chunk)
+    # with open(f'/tmp/{file_name}','wb') as file:
+    #     file.write(requests.get(url).content)
+    ninwo=auth
+    header = {'authorization': ninwo}
+    payload={'content':content}
+    r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+        data=payload, 
+        headers=header,
+        files={'file': open(f'/tmp/{file_name}', 'rb')}
+    )
+    return json.dumps(r.json())
 
 @app.route('/uploads')
 def uploads():
-    print("uploads")
     data = request.json # Get the JSON data from the request
     urls = data['urls'] # Extract the URLs from the JSON data
     channel = data['channel']
@@ -44,12 +73,14 @@ def uploads():
     resp=[]
     for url in urls:
       file_name=url.split("/")[-1]
-      with open(f'/tmp/{file_name}','wb') as file:
-          file.write(requests.get(url).content)
+      with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(f'/tmp/{file_name}','wb') as f:
+            for chunk in r.iter_content(chunk_size=8192): 
+                f.write(chunk)
       ninwo=auth
       header = {'authorization': ninwo}
       payload={'content':content}
-      print(f"uploading {url}")
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
