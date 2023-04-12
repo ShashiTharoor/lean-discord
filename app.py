@@ -18,10 +18,11 @@ def upload():
     url=request.args.get('url')
     channel=request.args.get('channel')
     content=request.args.get('content',"")
+    auth=request.args.get('content',"Bot MTA5NDY0MzA2MzQ0NTUyNDU1Mg.G4O8eh.qANX5vphsEgcef5D17TLc9MGKxmJLEdY8zOZig")
     file_name=url.split("/")[-1]
     with open(f'/tmp/{file_name}','wb') as file:
         file.write(requests.get(url).content)
-    ninwo="MTA5MjQ2MjUzODc5ODY3ODE0Ng.GmlM5O.f8Q4aQRr6qPapoqwe584r-bLW5bwI4Nb6al8RY"
+    ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
     r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
