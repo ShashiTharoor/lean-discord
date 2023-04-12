@@ -1,4 +1,4 @@
-import sys,requests,json
+import sys,requests,json,os
 from datetime import datetime
 
 import leancloud
@@ -46,5 +46,5 @@ def python_version():
     return jsonify({"python-version": sys.version})
 
  
- # if __name__ == '__main__':
- #  app.run(debug=True, port=os.getenv("PORT", default=5001))
+if __name__ == '__main__':
+  app.run(debug=True, port=os.getenv("PORT", default=5001))
