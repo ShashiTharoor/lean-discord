@@ -32,6 +32,31 @@ def upload():
     )
     return json.dumps(r.json())
 
+
+@app.route('/uploads')
+def uploads():
+    data = request.json # Get the JSON data from the request
+    urls = data['urls'] # Extract the URLs from the JSON data
+    channel = data['channel']
+    content=data.get('content')
+    auth=data.get('auth')
+    resp=[]
+    for url in urls:
+      file_name=url.split("/")[-1]
+      with open(f'/tmp/{file_name}','wb') as file:
+          file.write(requests.get(url).content)
+      ninwo=auth
+      header = {'authorization': ninwo}
+      payload={'content':content}
+      r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+          data=payload, 
+          headers=header,
+          files={'file': open(f'/tmp/{file_name}', 'rb')}
+      )
+      resp.append(r.json())
+    return json.dumps(resp)
+
+  
 @app.route('/time')
 def time():
     return str(datetime.now())
