@@ -32,9 +32,12 @@ def upload():
     # with open(file_name, 'rb') as f:
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
-        with open(f'/tmp/{file_name}','wb') as f:
-            for chunk in r.iter_content(chunk_size=8192): 
-                f.write(chunk)
+        if r.status_code==200:
+          with open(f'/tmp/{file_name}','wb') as f:
+              for chunk in r.iter_content(chunk_size=8192): 
+                  f.write(chunk)
+        else:
+          return f"got 404 not found for {url}"
     # with open(f'/tmp/{file_name}','wb') as file:
     #     file.write(requests.get(url).content)
     ninwo=auth
