@@ -35,6 +35,7 @@ def upload():
 
 @app.route('/uploads')
 def uploads():
+    print("uploads")
     data = request.json # Get the JSON data from the request
     urls = data['urls'] # Extract the URLs from the JSON data
     channel = data['channel']
@@ -48,6 +49,7 @@ def uploads():
       ninwo=auth
       header = {'authorization': ninwo}
       payload={'content':content}
+      print(f"uploading {url}")
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
