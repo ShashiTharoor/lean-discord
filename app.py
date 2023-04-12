@@ -31,8 +31,9 @@ def upload():
 #     return file_name
     # with open(file_name, 'rb') as f:
     with requests.get(url, stream=True) as r:
-        r.raise_for_status()
+        
         if r.status_code==200:
+          r.raise_for_status()
           with open(f'/tmp/{file_name}','wb') as f:
               for chunk in r.iter_content(chunk_size=8192): 
                   f.write(chunk)
