@@ -6,7 +6,7 @@ import os
 import leancloud
 
 from app import app
-from cloud import engine
+# from cloud import engine
 
 APP_ID = os.environ['LEANCLOUD_APP_ID']
 APP_KEY = os.environ['LEANCLOUD_APP_KEY']
@@ -19,7 +19,7 @@ leancloud.use_master_key(False)
 
 # Uncomment the following line to redirect HTTP requests to HTTPS.
 # app = leancloud.HttpsRedirectMiddleware(app)
-app = engine.wrap(app)
+# app = engine.wrap(app)
 application = app
 
 if __name__ == '__main__':
