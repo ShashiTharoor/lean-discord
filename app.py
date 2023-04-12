@@ -26,6 +26,8 @@ def upload():
     file_name=request.args.get('filename')
     if file_name==None:
       file_name=path
+    else:
+      file_name=request.args.get('filename')+"."+file_extension
 #     return file_name
     # with open(file_name, 'rb') as f:
     with requests.get(url, stream=True) as r:
