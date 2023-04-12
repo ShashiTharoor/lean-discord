@@ -4,4 +4,3 @@ markupsafe<=2.0.1
 Flask>=1.0.0
 Flask-Sockets>=0.1,<1.0
 requests
-urlparse
