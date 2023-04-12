@@ -6,7 +6,8 @@ from flask import Flask, jsonify, request
 from flask import render_template
 from flask_sockets import Sockets
 from leancloud import LeanCloudError
-
+from urlparse import urlparse
+from os.path import splitext
 app = Flask(__name__)
 
 @app.route('/')
@@ -19,7 +20,9 @@ def upload():
     channel=request.args.get('channel')
     content=request.args.get('content',"")
     auth=request.args.get('auth')
-    file_name=url.split("/")[-1]
+    parsed = urlparse(url)
+    root, ext = splitext(parsed.path)
+    file_name=request.args.get('file_name'+ext,url.split("/")[-1])
     # with open(file_name, 'rb') as f:
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
