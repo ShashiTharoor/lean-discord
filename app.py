@@ -18,7 +18,7 @@ def upload():
     url=request.args.get('url')
     channel=request.args.get('channel')
     content=request.args.get('content',"")
-    auth=request.args.get('content',"Bot MTA5NDY0MzA2MzQ0NTUyNDU1Mg.G4O8eh.qANX5vphsEgcef5D17TLc9MGKxmJLEdY8zOZig")
+    auth=request.args.get('auth')
     file_name=url.split("/")[-1]
     with open(f'/tmp/{file_name}','wb') as file:
         file.write(requests.get(url).content)
