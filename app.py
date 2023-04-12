@@ -23,7 +23,7 @@ def upload():
     path = url.split("/")[-1]
     # Split the path into filename and extension
     filename, file_extension = path.split(".", 1) if "." in path else (path, None)
-    file_name=request.args.get('filename'+file_extension,path)
+    file_name=request.args.get('filename'+file_extension)
     return file_name
     # with open(file_name, 'rb') as f:
     with requests.get(url, stream=True) as r:
