@@ -16,7 +16,21 @@ def index():
   
 @app.route('/upload')
 def upload():
-
+    url=request.args.get('url')
+    channel=request.args.get('channel')
+    content=request.args.get('content',"")
+    file_name=url.split("/")[-1]
+    with open(f'/tmp/{file_name}','wb') as file:
+        file.write(requests.get(url).content)
+    ninwo="MTA5MjQ2MjUzODc5ODY3ODE0Ng.GmlM5O.f8Q4aQRr6qPapoqwe584r-bLW5bwI4Nb6al8RY"
+    header = {'authorization': ninwo}
+    payload={'content':content}
+    r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+        data=payload, 
+        headers=header,
+        files={'file': open(f'/tmp/{file_name}', 'rb')}
+    )
+    return json.dumps(r.json())
 
 @app.route('/time')
 def time():
@@ -27,11 +41,11 @@ def time():
 def print_version():
     import sys
     return sys.version
-  
+
 @app.route('/api/python-version', methods=['GET'])
 def python_version():
     return jsonify({"python-version": sys.version})
 
  
- if __name__ == '__main__':
-  app.run(debug=True, port=os.getenv("PORT", default=5001))
+#  if __name__ == '__main__':
+#   app.run(debug=True, port=os.getenv("PORT", default=5001))
