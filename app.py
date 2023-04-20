@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 from flask import render_template
 from flask_sockets import Sockets
 from leancloud import LeanCloudError
+from pytube import YouTube
 # from urlparse import urlparse
 # from os.path import splitext
 app = Flask(__name__)
@@ -14,6 +15,37 @@ app = Flask(__name__)
 def index():
   return "hello"
   
+
+@app.route('/yt')
+def ytupload():
+    url=request.args.get('url')
+    channel=request.args.get('channel')
+    content=request.args.get('content',"")
+    auth=request.args.get('auth')
+    path = url.split("/")[-1]
+    # Split the path into filename and extension
+    filename, file_extension = path.split(".", 1) if "." in path else (path, None)
+    file_name=request.args.get('filename')
+    if file_name==None:
+      file_name=path
+    else:
+      file_name=request.args.get('filename')+"."+file_extension
+#     return file_name
+    # with open(file_name, 'rb') as f:
+    yt = YouTube(url)
+    print("downloading Youtube Video")
+    yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
+    ninwo=auth
+    header = {'authorization': ninwo}
+    payload={'content':content}
+    r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+        data=payload, 
+        headers=header,
+        files={'file': open(f'/tmp/{file_name}', 'rb')}
+    )
+    return json.dumps(r.json())
+
+    
 @app.route('/upload')
 def upload():
     url=request.args.get('url')
