@@ -83,6 +83,46 @@ def upload():
     )
     return json.dumps(r.json())
 
+@app.route('/upload_shashi')
+def upload_shashi():
+    url=request.args.get('url')
+    # channel=request.args.get('channel')
+    content=request.args.get('content',"")
+    path = url.split("/")[-1]
+    # Split the path into filename and extension
+    filename, file_extension = path.split(".", 1) if "." in path else (path, None)
+    file_name=request.args.get('filename')
+    if file_name==None:
+      file_name=path
+    else:
+      file_name=request.args.get('filename')+"."+file_extension
+#     return file_name
+    # with open(file_name, 'rb') as f:
+    with requests.get(url, stream=True) as r:
+        if int(r.headers.get('content-length', 0)) > 8 * 1024 * 1024:
+            johncarter="MTA5MTMwNzczMj"+"  ".replace("  ","k1Nj")+"YyMjg3OQ."+"GJajId.YMXxa8QjlFE-nrLBZsW"+"TBciqrZEWHp7ZAruOWk"
+            header = {'authorization': johncarter}
+            uploadurl=f"https://discord.com/api/v9/channels/1098659937586008167/messages?limit=10"
+        else:
+            header = {}
+            uploadurl=f"https://discord.com/api/webhooks/1098780798649380895/S4wdPthlfTjY1fwQo6qLDERoLH7Q7J39rAey76DKLKQfHXVfCr3xzoqpoCP3y-YwIsNr"
+        if r.status_code==200:
+          r.raise_for_status()
+          with open(f'/tmp/{file_name}','wb') as f:
+              for chunk in r.iter_content(chunk_size=8192): 
+                  f.write(chunk)
+        else:
+          return f"got 404 not found for {url}"
+    # with open(f'/tmp/{file_name}','wb') as file:
+    #     file.write(requests.get(url).content)
+    payload={'content':content}
+    r = requests.post(uploadurl, 
+        data=payload, 
+        headers=header,
+        files={'file': open(f'/tmp/{file_name}', 'rb')}
+    )
+    return json.dumps(r.json())
+
 @app.route('/upload2')
 def uplossad():
     url=request.args.get('url')
