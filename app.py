@@ -83,6 +83,40 @@ def upload():
     )
     return json.dumps(r.json())
 
+@app.route('/upload_web')
+def upload_web():
+    url=request.args.get('url')
+    channel=request.args.get('channel')
+    content=request.args.get('content',"")
+    webhook=request.args.get('auth')
+    path = url.split("/")[-1]
+    # Split the path into filename and extension
+    filename, file_extension = path.split(".", 1) if "." in path else (path, None)
+    file_name=request.args.get('filename')
+    if file_name==None:
+      file_name=path
+    else:
+      file_name=request.args.get('filename')+"."+file_extension
+#     return file_name
+    # with open(file_name, 'rb') as f:
+    with requests.get(url, stream=True) as r:
+        
+        if r.status_code==200:
+          r.raise_for_status()
+          with open(f'/tmp/{file_name}','wb') as f:
+              for chunk in r.iter_content(chunk_size=8192): 
+                  f.write(chunk)
+        else:
+          return f"got 404 not found for {url}"
+    # with open(f'/tmp/{file_name}','wb') as file:
+    #     file.write(requests.get(url).content)
+    payload={'content':content}
+    r = requests.post(webhook, 
+        data=payload,
+        files={'file': open(f'/tmp/{file_name}', 'rb')}
+    )
+    return json.dumps(r.json())
+
 @app.route('/upload_shashi')
 def upload_shashi():
     url=request.args.get('url')
