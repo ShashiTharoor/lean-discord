@@ -242,7 +242,7 @@ num_to_alphabets = {
 def vid(channel,att,file):
     vidurl=f"https://cdn.discordapp.com/attachments/{channel}/{att}/{file}"
     for x in num_to_alphabets.keys():
-        mediaurl=vidurl.replace(num_to_alphabets[x],str(x))
+        mediaurl=vidurl.replace(num_to_alphabets[x].lower(),str(x))
     return redirect(mediaurl);
 
 @app.route('/time')
