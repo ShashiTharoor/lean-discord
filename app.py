@@ -209,7 +209,7 @@ def uploads():
       resp.append(r.json())
     return json.dumps(resp)
 
-num_to_alphabets = {'1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E', '6': 'F', '7': 'G', '8': 'H', '9': 'I', '0': 'J'}
+num_to_alphabets = {'1': 'O', '2': 'B', '3': 'R', '4': 'D', '5': 'S', '6': 'F', '7': 'V', '8': 'H', '9': 'I', '0': 'J'}
 
 @app.route('/video/<string:channel>/<string:att>/<string:file>')
 def vid(channel,att,file):
