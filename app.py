@@ -213,6 +213,12 @@ num_to_alphabets = {'1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E', '6': 'F', 
 
 @app.route('/video/<string:channel>/<string:att>/<string:file>')
 def vid(channel,att,file):
+    mediaurl=f"https://media.discordapp.net/attachments/{channel}/{att}"
+    for x in num_to_alphabets.keys():
+        mediaurl=mediaurl.replace(num_to_alphabets[x],str(x))
+    return redirect(mediaurl+f"/{file}");
+@app.route('/vi/<string:channel>/<string:att>/<string:file>')
+def vi(channel,att,file):
     mediaurl=f"https://cdn.discordapp.com/attachments/{channel}/{att}"
     for x in num_to_alphabets.keys():
         mediaurl=mediaurl.replace(num_to_alphabets[x],str(x))
