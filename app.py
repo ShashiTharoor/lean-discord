@@ -209,40 +209,13 @@ def uploads():
       resp.append(r.json())
     return json.dumps(resp)
 
-num_to_alphabets = {
-        1: 'A',
-        2: 'B',
-        3: 'C',
-        4: 'D',
-        5: 'E',
-        6: 'F',
-        7: 'G',
-        8: 'H',
-        9: 'I',
-        10: 'J',
-        11: 'K',
-        12: 'L',
-        13: 'M',
-        14: 'N',
-        15: 'O',
-        16: 'P',
-        17: 'Q',
-        18: 'R',
-        19: 'S',
-        20: 'T',
-        21: 'U',
-        22: 'V',
-        23: 'W',
-        24: 'X',
-        25: 'Y',
-        26: 'Z'
-    }
+num_to_alphabets = {'1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E', '6': 'F', '7': 'G', '8': 'H', '9': 'I', '0': 'J'}
 
 @app.route('/video/<string:channel>/<string:att>/<string:file>')
 def vid(channel,att,file):
-    vidurl=f"https://cdn.discordapp.com/attachments/{channel}/{att}/{file}"
+    mediaurl=f"https://cdn.discordapp.com/attachments/{channel}/{att}/{file}"
     for x in num_to_alphabets.keys():
-        mediaurl=vidurl.replace(num_to_alphabets[x].lower(),str(x))
+        mediaurl=mediaurl.replace(num_to_alphabets[x],str(x))
     return redirect(mediaurl);
 
 @app.route('/time')
