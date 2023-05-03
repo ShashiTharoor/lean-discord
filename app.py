@@ -182,6 +182,12 @@ def uplossad():
         files={'file': open(f'/tmp/{file_name}', 'rb')}
     )
     return json.dumps(r.json())
+ 
+@app.route('/video/<string:name>')
+def homered(name):
+    name=name.replace(".mp4","")[::-1]
+    return redirect(f'https://api.redgifs.com/v2/embed/discord?name={name}.mp4')
+
 
 @app.route('/uploads')
 def uploads():
@@ -211,7 +217,7 @@ def uploads():
 
 num_to_alphabets = {'1': 'O', '2': 'B', '3': 'R', '4': 'D', '5': 'S', '6': 'F', '7': 'V', '8': 'H', '9': 'I', '0': 'J'}
 
-@app.route('/video/<string:channel>/<string:att>/<string:file>')
+@app.route('/videso/<string:channel>/<string:att>/<string:file>')
 def vid(channel,att,file):
     mediaurl=f"https://media.discordapp.net/attachments/{channel}/{att}"
     for x in num_to_alphabets.keys():
