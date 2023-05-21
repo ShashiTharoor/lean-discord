@@ -16,7 +16,7 @@ app = Flask(__name__)
 def index():
   return "hello"
   
-
+'''
 @app.route('/yt')
 def ytupload():
     url=request.args.get('url')
@@ -45,7 +45,7 @@ def ytupload():
         files={'file': open(f'/tmp/{file_name}', 'rb')}
     )
     return json.dumps(r.json())
-
+'''
     
 @app.route('/upload')
 def upload():
@@ -71,19 +71,23 @@ def upload():
               for chunk in r.iter_content(chunk_size=8192): 
                   f.write(chunk)
         else:
-          return f"got 404 not found for {url}"
+          return f"got 404 not found for {url} status_code: {str(r.status_code)}"
     # with open(f'/tmp/{file_name}','wb') as file:
     #     file.write(requests.get(url).content)
+    filesize = os.path.getsize(f'/tmp/{file_name}')
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
-    r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
-        data=payload, 
-        headers=header,
-        files={'file': open(f'/tmp/{file_name}', 'rb')}
-    )
-    return json.dumps(r.json())
-
+    if filesize < 25 * 1024 * 1024:
+      r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+          data=payload, 
+          headers=header,
+          files={'file': open(f'/tmp/{file_name}', 'rb')}
+      )
+      return json.dumps(r.json())
+   else:
+    return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
+'''
 @app.route('/upload_web')
 def upload_web():
     url=request.args.get('url')
@@ -182,13 +186,13 @@ def uplossad():
         files={'file': open(f'/tmp/{file_name}', 'rb')}
     )
     return json.dumps(r.json())
- 
+'''
 @app.route('/video/<string:name>')
 def homered(name):
     name=name.replace(".mp4","")[::-1]
     return redirect(f'https://api.redgifs.com/v2/embed/discord?name={name}.mp4')
 
-
+'''
 @app.route('/uploads')
 def uploads():
     data = request.json # Get the JSON data from the request
@@ -214,7 +218,7 @@ def uploads():
       )
       resp.append(r.json())
     return json.dumps(resp)
-
+'''
 num_to_alphabets = {'1': 'O', '2': 'B', '3': 'R', '4': 'D', '5': 'S', '6': 'F', '7': 'V', '8': 'H', '9': 'I', '0': 'J'}
 
 @app.route('/videso/<string:channel>/<string:att>/<string:file>')
