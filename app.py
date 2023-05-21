@@ -38,30 +38,34 @@ def ytupload():
 #     stream=yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
     streams = yt.streams.filter(res='360p', adaptive=True)
     stream = streams.first()
-    stream.download(filename=file_name, output_path="./")
+    stream.download(filename=file_name, output_path="/tmp/")
     print(stream)
-    print(os.listdir('./'))
+    print(os.listdir('/tmp/'))
     url=stream.url
     print(url)
-    with requests.get(url, stream=True) as r:
-        print(r.status_code)
-        if r.status_code==200 or r.status_code==403:
-          r.raise_for_status()
-          with open(f'/tmp/{file_name}','wb') as f:
-              for chunk in r.iter_content(chunk_size=8192): 
-                  f.write(chunk)
-        else:
-          return f"got 404 not found for {url} status_code: {str(r.status_code)}"
+#     with requests.get(url, stream=True) as r:
+#         print(r.status_code)
+#         if r.status_code==200 or r.status_code==403:
+#           r.raise_for_status()
+#           with open(f'/tmp/{file_name}','wb') as f:
+#               for chunk in r.iter_content(chunk_size=8192): 
+#                   f.write(chunk)
+#         else:
+#           return f"got 404 not found for {url} status_code: {str(r.status_code)}"
     print(os.listdir('./'))
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
-    r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
-        data=payload, 
-        headers=header,
-        files={'file': open(f'/tmp/{file_name}', 'rb')}
-    )
-    return json.dumps(r.json())
+    filesize = os.path.getsize(f'/tmp/{file_name}')
+    if filesize < 25 * 1024 * 1024:
+      r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+          data=payload, 
+          headers=header,
+          files={'file': open(f'/tmp/{file_name}', 'rb')}
+      )
+      return json.dumps(r.json())
+    else:
+      return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
 # '''
     
 @app.route('/upload')
