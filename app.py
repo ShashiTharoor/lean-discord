@@ -86,7 +86,7 @@ def upload():
       )
       return json.dumps(r.json())
     else:
-    return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
+      return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
 '''
 @app.route('/upload_web')
 def upload_web():
