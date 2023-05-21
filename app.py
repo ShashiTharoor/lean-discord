@@ -37,7 +37,22 @@ def ytupload():
     print("downloading Youtube Video")
 #     stream=yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
     streams = yt.streams.filter(res='360p', adaptive=True)
-    stream = streams.first().download(filename=filename, output_path="./")
+    stream = streams.first()
+    stream.download(filename=filename, output_path="./")
+    print(stream)
+    print(os.listdir('./'))
+    url=stream.url
+    print(url)
+    with requests.get(url, stream=True) as r:
+        print(r.status_code)
+        if r.status_code==200 or r.status_code==403:
+          r.raise_for_status()
+          with open(f'/tmp/{file_name}','wb') as f:
+              for chunk in r.iter_content(chunk_size=8192): 
+                  f.write(chunk)
+        else:
+          return f"got 404 not found for {url} status_code: {str(r.status_code)}"
+    print(os.listdir('./'))
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
