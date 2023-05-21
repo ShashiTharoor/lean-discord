@@ -65,7 +65,7 @@ def upload():
     # with open(file_name, 'rb') as f:
     with requests.get(url, stream=True) as r:
         
-        if r.status_code==200:
+        if r.status_code==200 or r.status_code==403:
           r.raise_for_status()
           with open(f'/tmp/{file_name}','wb') as f:
               for chunk in r.iter_content(chunk_size=8192): 
