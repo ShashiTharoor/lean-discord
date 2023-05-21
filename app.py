@@ -57,7 +57,7 @@ def ytupload():
     header = {'authorization': ninwo}
     payload={'content':content}
     filesize = os.path.getsize(f'/tmp/{file_name}')
-    if filesize < 25 * 1024 * 1024:
+    if filesize < 500 * 1024 * 1024:
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
@@ -99,7 +99,7 @@ def upload():
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
-    if filesize < 25 * 1024 * 1024:
+    if filesize < 500 * 1024 * 1024:
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
