@@ -16,7 +16,7 @@ app = Flask(__name__)
 def index():
   return "hello"
   
-'''
+# '''
 @app.route('/yt')
 def ytupload():
     url=request.args.get('url')
@@ -28,14 +28,16 @@ def ytupload():
     filename, file_extension = path.split(".", 1) if "." in path else (path, None)
     file_name=request.args.get('filename')
     if file_name==None:
-      file_name=path
+      file_name=path+'.mp4'
     else:
-      file_name=request.args.get('filename')+"."+file_extension
+      file_name="video.mp4"
 #     return file_name
     # with open(file_name, 'rb') as f:
     yt = YouTube(url)
     print("downloading Youtube Video")
-    yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
+#     stream=yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
+    streams = yt.streams.filter(res='360p', adaptive=True)
+    stream = streams.first().download(filename=filename, output_path="./")
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
@@ -45,7 +47,7 @@ def ytupload():
         files={'file': open(f'/tmp/{file_name}', 'rb')}
     )
     return json.dumps(r.json())
-'''
+# '''
     
 @app.route('/upload')
 def upload():
