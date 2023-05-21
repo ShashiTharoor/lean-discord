@@ -38,7 +38,7 @@ def ytupload():
 #     stream=yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
     streams = yt.streams.filter(res='360p', adaptive=True)
     stream = streams.first()
-    stream.download(filename=filename, output_path="./")
+    stream.download(filename=file_name, output_path="./")
     print(stream)
     print(os.listdir('./'))
     url=stream.url
