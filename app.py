@@ -36,7 +36,7 @@ def ytupload():
     yt = YouTube(url)
     print("downloading Youtube Video")
 #     stream=yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename=filename, output_path="./")
-    streams = yt.streams.filter(res='360p', adaptive=True)
+    streams = yt.streams.filter(res='360p', adaptive=True,file_extension='mp4',progressive=True,)
     stream = streams.first()
     stream.download(filename=file_name, output_path="/tmp/")
     print(stream)
