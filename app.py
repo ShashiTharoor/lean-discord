@@ -68,6 +68,38 @@ def ytupload():
       return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
 # '''
     
+@app.route('/ytdl')
+def ytupsload():
+    url=request.args.get('url')
+    channel=request.args.get('channel')
+    content=request.args.get('content',"")
+    auth=request.args.get('auth')
+    path = url.split("/")[-1]
+    # Split the path into filename and extension
+    filename, file_extension = path.split(".", 1) if "." in path else (path, None)
+    file_name=request.args.get('filename')
+    if file_name==None:
+      file_name=path+'.mp4'
+    else:
+      file_name="video.mp4"
+    
+    print(os.listdir('/tmp/'))
+    os.system(f"./yt-dlp --ffmpeg-location ./ffmpeg '{url}' -o /tmp/{file_name}")    
+    print(os.listdir('./'))
+    ninwo=auth
+    header = {'authorization': ninwo}
+    payload={'content':content}
+    filesize = os.path.getsize(f'/tmp/{file_name}')
+    if filesize < 25 * 1024 * 1024:
+      r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
+          data=payload, 
+          headers=header,
+          files={'file': open(f'/tmp/{file_name}', 'rb')}
+      )
+      return json.dumps(r.json())
+    else:
+      return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
+
 @app.route('/upload')
 def upload():
     url=request.args.get('url')
@@ -272,3 +304,4 @@ def python_version():
  
 # if __name__ == '__main__':
 #   app.run(debug=True, port=os.getenv("PORT", default=5001))
+
