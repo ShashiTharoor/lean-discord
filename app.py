@@ -82,7 +82,8 @@ def ytupsload():
       file_name=path+'.mp4'
     else:
       file_name="video.mp4"
-    
+    os.system(f'rm -rf /tmp/{file_name}')
+    os.system(f'rm -rf /tmp/*mp4')
     print(os.listdir('/tmp/'))
     os.system(f"./yt-dlp --ffmpeg-location ./ffmpeg '{url}' -o /tmp/{file_name}")    
     print(os.listdir('./'))
