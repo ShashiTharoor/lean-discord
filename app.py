@@ -99,15 +99,26 @@ def upload():
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
-    if filesize < 500 * 1024 * 1024:
+    if filesize < 50 * 1024 * 1024:
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
           files={'file': open(f'/tmp/{file_name}', 'rb')}
       )
-      return json.dumps(r.json())+f'\n\nfilesize: {filesize}'
+      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'
+    elif filesize < 250 * 1024 * 1024:
+      zip=zipp_file(f'/tmp/{file_name}', f'/tmp/{file_name}.zip')
+      r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", data=payload, headers=header,files={'file': open(f'/tmp/{file_name}.zip', 'rb')})
+      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'
     else:
       return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
+
+def zipp_file(file_path, zip_path):
+    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zip_file:
+        zip_file.write(file_path)
+    return zip_path
+
+
 '''
 @app.route('/upload_web')
 def upload_web():
