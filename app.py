@@ -1,7 +1,7 @@
 import sys,requests,json,os
 from datetime import datetime
 
-import leancloud
+import leancloud,zipfile
 from flask import Flask, jsonify, request, render_template, redirect, jsonify
 from flask import render_template
 from flask_sockets import Sockets
