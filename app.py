@@ -105,7 +105,7 @@ def upload():
           headers=header,
           files={'file': open(f'/tmp/{file_name}', 'rb')}
       )
-      return json.dumps(r.json())
+      return json.dumps(r.json())+f'\n\nfilesize: {filesize}'
     else:
       return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
 '''
