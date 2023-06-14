@@ -105,11 +105,12 @@ def upload():
           headers=header,
           files={'file': open(f'/tmp/{file_name}', 'rb')}
       )
-      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'
+      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'+f'\n\nfile /tmp/{file_name}'
     elif filesize < 250 * 1024 * 1024:
       zip=zipp_file(f'/tmp/{file_name}', f'/tmp/{file_name}.zip')
+      filesize = os.path.getsize(f'/tmp/{file_name}.zip')
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", data=payload, headers=header,files={'file': open(f'/tmp/{file_name}.zip', 'rb')})
-      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'
+      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'+f'\n\nfile /tmp/{file_name}.zip'
     else:
       return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
 
