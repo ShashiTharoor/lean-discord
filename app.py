@@ -1,7 +1,7 @@
 import sys,requests,json,os
 from datetime import datetime
 
-import leancloud
+import leancloud,zipfile
 from flask import Flask, jsonify, request, render_template, redirect, jsonify
 from flask import render_template
 from flask_sockets import Sockets
@@ -68,6 +68,7 @@ def ytupload():
       return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
 # '''
     
+    
 @app.route('/ytdl')
 def ytupsload():
     url=request.args.get('url')
@@ -91,7 +92,7 @@ def ytupsload():
     header = {'authorization': ninwo}
     payload={'content':content}
     filesize = os.path.getsize(f'/tmp/{file_name}')
-    if filesize < 25 * 1024 * 1024:
+    if filesize <= 25 * 1024 * 1024:
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
@@ -132,15 +133,27 @@ def upload():
     ninwo=auth
     header = {'authorization': ninwo}
     payload={'content':content}
-    if filesize < 500 * 1024 * 1024:
+    if filesize < 50 * 1024 * 1024:
       r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", 
           data=payload, 
           headers=header,
           files={'file': open(f'/tmp/{file_name}', 'rb')}
       )
-      return json.dumps(r.json())
+      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'+f'\n\nfile /tmp/{file_name}'
+    elif filesize < 250 * 1024 * 1024:
+      zip=zipp_file(f'/tmp/{file_name}', f'/tmp/{file_name}.zip')
+      filesize = os.path.getsize(f'/tmp/{file_name}.zip')
+      r = requests.post(f"https://discord.com/api/v9/channels/{channel}/messages?limit=10", data=payload, headers=header,files={'file': open(f'/tmp/{file_name}.zip', 'rb')})
+      return json.dumps(r.json())+f'\n\nfilesize: {str(filesize/(1024*1024))}'+f'\n\nfile /tmp/{file_name}.zip'
     else:
       return {'error':'file size is bigger than 25 mb', 'filesize':filesize/(1024*1024)}
+
+def zipp_file(file_path, zip_path):
+    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zip_file:
+        zip_file.write(file_path)
+    return zip_path
+
+
 '''
 @app.route('/upload_web')
 def upload_web():
@@ -301,8 +314,4 @@ def print_version():
 @app.route('/api/python-version', methods=['GET'])
 def python_version():
     return jsonify({"python-version": sys.version})
-
- 
-# if __name__ == '__main__':
-#   app.run(debug=True, port=os.getenv("PORT", default=5001))
 
